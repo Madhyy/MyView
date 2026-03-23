@@ -1,6 +1,6 @@
 # MyView
 
-### **Autor:** Maria Eduarda Ao
+### **Autor:** Maria Eduarda Aparecida da Cruz
 
 Este projeto tem como objetivo listar filmes e séries, permitindo que o usuário os classifique, por exemplo: adicionar aos favoritados, adicionar o título na lista "para ver" ou "finalizado". Constando também com filtros de procura ou decisão (uma roleta de decisão) sobre qual série/ filme assistir.
 
