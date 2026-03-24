@@ -73,14 +73,24 @@ erDiagram
 
 Breve explicação das tabelas principais:
 
-- **Clientes:** Responsável por armazenar os dados de autenticação e o saldo consolidado do usuário.
-  - id: Identificador único gerado pelo JSON Server (String ou Hash).
-  - cpf: Chave de acesso do usuário. Em um cenário real seria único, mas para o MVP não há trava estrita no banco, apenas validação no front-end.
-  - saldo: Valor numérico (Float) que representa o dinheiro disponível. Pode ficar negativo devido à cobrança implacável de taxas do banco.
-- **Transações:** Registra o histórico financeiro. Regra de Negócio Crítica: Toda transação de SAQUE ou DEPOSITO feita pelo cliente deve gerar, via JavaScript, uma transação secundária automática do tipo TAXA, subtraindo um valor do saldo do cliente.
-  - clienteId: Chave estrangeira que vincula a transação ao cliente (padrão de nomenclatura exigido pelo JSON Server para rotas aninhadas).
-  - tipo: Aceita apenas os valores "SAQUE", "DEPOSITO" ou "TAXA".
-  - valor: Sempre um número positivo. O front-end decide se soma ou subtrai do saldo geral baseado no tipo.
+- **Usuários:** Responsável por armazenar os dados de autenticação e o perfil de quem utiliza o MyView.
+    - id: Identificador único gerado pelo JSON Server (String ou Hash).
+    - email: Chave de acesso única do usuário. No MVP, a validação de duplicidade é realizada no front-end para garantir que não existam contas com o mesmo endereço.
+    - nome: Nome de exibição do usuário para personalização da interface.
+    - senha: Hash ou string para autenticação de acesso.
+
+- **Watchlist (Conteúdo):** Registra o acervo de filmes e séries que o usuário deseja assistir. Regra de Negócio Crítica: Todo item adicionado deve obrigatoriamente conter o runtime (duração) e genres (gêneros) vindos da API, pois são os pilares para o funcionamento do algoritmo da Roleta.
+    - usuarioId: Chave estrangeira que vincula o conteúdo ao usuário (padrão de nomenclatura do JSON Server para rotas aninhadas).
+    - tmdbId: ID de referência da API externa para consulta de detalhes e imagens.
+    - titulo: Nome da obra.
+    - duracao: Valor numérico (Integer) em minutos. É o campo base para o filtro de "tempo disponível".
+    - status: Aceita apenas os valores "PENDENTE" ou "ASSISTIDO". Itens marcados como assistidos são ignorados pela roleta.
+
+- **Sorteios:** Registra o histórico de decisões feitas pela roleta. Regra de Negócio Crítica: Cada vez que a roleta é acionada e o usuário confirma a escolha, o sistema deve registrar o filtroAplicado para gerar estatísticas de preferência futura.
+    - usuarioId: Chave estrangeira que vincula o sorteio ao dono da conta.
+    - conteudoId: Referência ao item específico que foi selecionado no giro.
+    - filtroAplicado: Objeto contendo os critérios usados no momento (ex: { "tempoMax": 90, "genero": "Comédia" }).
+    - dataSorteio: Timestamp da data e hora em que a decisão foi tomada.
 
 ## 3. Rotas da API (JSON Server)
 
