@@ -11,27 +11,30 @@ O objetivo é permitir que o usuário gerencie uma lista de interesses (Watchlis
 
 - **Visitante:** Usuário não autenticado que pode buscar por títulos e ter acesso aos detalhes, entretanto não consegue salvar nada em uma lista persistente ou girar a roleta com itens próprios.
 - **Cliente:** Usuário autenticado que pode buscar títulos e gerenciar a própria lista salva, além do acesso aos filtros personalizados.
-- **O Banco (Sistema):** Ator invisível que aplica as regras de negócio e desconta as taxas automaticamente a cada transação do Cliente.
+- **Provedor de Dados (API):** É a principal fonte para o intuito do site funcionar, onde será fornecido os dados necessários das midias.
+- **Sistema:** Faz tudo acontecer.
 
 ## 3. Histórias de Usuário e Escopo
 
-Abaixo estão as funcionalidades principais do MVP (Minimum Viable Product), escritas sob a perspectiva do usuário final.
+Abaixo estão as funcionalidades principais do MyView, escritas sob a perspectiva do usuário final.
 
 ### 👤 Épico 1: Autenticação e Conta
 
-- **US01 - Abertura de Conta:** Como um Visitante, quero preencher um formulário com meus dados pessoais (Nome, CPF, Senha) para criar uma nova conta no Roubank.
-  - _Critérios de Aceitação:_ O CPF deve ser validado; todos os campos são obrigatórios; a conta deve iniciar com saldo R$ 0,00.
-- **US02 - Acesso ao Sistema (Login):** Como um Cliente, quero inserir meu CPF e Senha para acessar meu painel financeiro.
+- **US01 - Criação de Conta:** Como um visitante, quero preencher um formulário (Nome de usuário, Email, Senha) para criar um perfil personalizado no MyView.
+  - _Critérios de Aceitação:_ O Email deve ser validado; todos os campos são obrigatórios; Não é possivel utilizar mais de uma vez o mesmo email.
+- **US02 - Login de Usuario:** Como um usuário, quero inserir minhas credenciais para acessar minha Watchlist e funcionalidades personalizadas.
 
-### 💰 Épico 2: Movimentações Financeiras
+### 🎬 Épico 2: Curadoria e Watchlist (O "Cadastro e Listagem")
 
-- **US03 - Visualização de Saldo:** Como um Cliente logado, quero ver meu saldo total atualizado em destaque no painel principal, para saber quanto dinheiro (ainda) tenho.
-- **US04 - Realizar Depósito:** Como um Cliente, quero informar um valor para depositar na minha conta.
-  - _Critérios de Aceitação:_ O valor deve ser positivo; o sistema deve cobrar uma **"Taxa de Depósito" (ex: 2% do valor)** e creditar apenas o valor líquido na conta do cliente.
-- **US05 - Realizar Saque:** Como um Cliente, quero informar um valor para sacar da minha conta.
-  - _Critérios de Aceitação:_ O cliente não pode sacar mais do que o saldo disponível + limite; o sistema deve cobrar uma **"Taxa de Saque" (ex: R$ 5,00 fixos por saque)**, descontando o valor do saque + a taxa do saldo total.
+- **US03 - Busca via API:** Como um Usuário, quero pesquisar títulos por nome para encontrar filmes e séries sem precisar digitar os detalhes manualmente.
+- **US04 - Adicionar à Lista:** Como um Cliente, quero informar um valor para depositar na minha conta.
+  - _Critérios de Aceitação:_ O sistema deve salvar o ID da API, o gênero e a duração; o título deve aparecer imediatamente na listagem do usuário.
+- **US05 - Gerenciar Conteúdo:** Como um Usuário, quero poder excluir itens ou marcá-los como "Já Visto" para organizar meu catálogo.
+  - _Critérios de Aceitação:_ Itens marcados como "Visto" não devem aparecer nas opções de sorteio da roleta.
 
-### 📊 Épico 3: Histórico e Transparência
+### 🎡 Épico 3: A Experiência MyView (A Roleta)
 
-- **US06 - Visualizar Extrato:** Como um Cliente, quero visualizar uma lista (tabela ou cards) com o histórico de todas as minhas transações (depósitos e saques).
-  - _Critérios de Aceitação:_ A lista deve mostrar a data, o tipo de transação, o valor bruto e **o valor da taxa cobrada** pelo Roubank, deixando claro o quanto o cliente perdeu na operação.
+- **US06 - Filtro de Momento:** Como um Usuário Indeciso, quero selecionar filtros de "Tempo Disponível" e "Gênero" antes de sortear.
+- _Critérios de Aceitação:_ O filtro de tempo deve comparar a duração real do filme com o limite imposto pelo usuário.
+- **US07 - O Sorteio (Roleta):** Como um Usuário Indeciso, quero acionar a roleta para que o MyView escolha o que vou assistir.
+- _Critérios de Aceitação:_ O sorteio deve ser aleatório dentro dos filtros aplicados; o resultado deve exibir o pôster e a sinopse do filme escolhido.
