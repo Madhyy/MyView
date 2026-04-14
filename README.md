@@ -24,10 +24,11 @@ https://utfpr-gp.github.io/roubank-css/
 
 ## 💻 Tecnologias e Dependências
 
-- **Framework CSS:** Bootstrap
+- **Framework CSS:** Bootstrap - A escolha pelo Bootstrap 5 se deu por sua estabilidade e pela vasta biblioteca de utilitários de espaçamento e flexbox, que permitem uma manipulação precisa do layout sem a necessidade de escrever CSS redundante.
 - **JavaScript:**
   - **JQuery** - Para realizar animações e manipulação do DOM.
   - **JSON Server** - Para simular uma API REST.
+  - **The Movie Database (TMDB API)** - O TMDB foi selecionado por ser a referência global em dados de entretenimento. Sua API oferece uma infraestrutura sólida para a busca de títulos e recuperação de metadados cruciais.
 
 ## ✅ Checklist | Indicadores de Desempenho (ID) dos Resultados de Aprendizagem (RA)
 
