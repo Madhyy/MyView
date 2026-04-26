@@ -1,0 +1,152 @@
+# 🛠️ Especificação Técnica (Tech Spec) - MyView
+
+Este documento detalha a arquitetura técnica, o modelo de dados e os contratos de API (via JSON Server) necessários para o funcionamento do sistema de curadoria e sorteio MyView.
+
+## 1. Modelo de Dados (Diagrama ER)
+
+Abaixo está o Diagrama Entidade-Relacionamento (DER) que representa a estrutura do nosso "banco de dados" (`db.json`) e como as informações se conectam.
+
+```mermaid
+erDiagram
+    USUARIO ||--o{ WATCHLIST : possui
+    USUARIO ||--o{ FILTRO : aplica
+    USUARIO ||--o{ SORTEIO : realiza
+    WATCHLIST ||--o{ ITEM_CONTEUDO : contem
+    ITEM_CONTEUDO ||--o{ GENERO : pertence
+    FILTRO ||--o{ GENERO : filtra
+    SORTEIO ||--o{ ITEM_CONTEUDO : seleciona
+    SORTEIO ||--o{ FILTRO : utiliza
+
+    USUARIO {
+        int idUsuario PK
+        string nomeUsuario UK
+        string email UK
+        string senhaHash
+        datetime dataCriacao
+        datetime dataUltimaAtualizacao
+    }
+
+    WATCHLIST {
+        int idWatchlist PK
+        int idUsuario FK
+        string nome
+        datetime dataCriacao
+    }
+
+    ITEM_CONTEUDO {
+        int idItem PK
+        int idWatchlist FK
+        string idAPIExterna
+        string titulo
+        text sinopse
+        string urlPoster
+        int duracao
+        boolean jaVisto
+        datetime dataAdicao
+        datetime dataModificacao
+    }
+
+    GENERO {
+        int idGenero PK
+        string nomeGenero UK
+    }
+
+    FILTRO {
+        int idFiltro PK
+        int idUsuario FK
+        int tempoMaximoDisponivel
+        int idGenero FK
+        datetime dataAplicacao
+    }
+
+    SORTEIO {
+        int idSorteio PK
+        int idUsuario FK
+        int idItemSelecionado FK
+        int idFiltro FK
+        datetime dataHoraSorteio
+        boolean foiAssistido
+    }
+```
+
+## 2. Dicionário de Dados
+
+Breve explicação das tabelas principais:
+
+- **Usuários:** Responsável por armazenar os dados de autenticação e o perfil de quem utiliza o MyView.
+    - id: Identificador único gerado pelo JSON Server (String ou Hash).
+    - email: Chave de acesso única do usuário. No MVP, a validação de duplicidade é realizada no front-end para garantir que não existam contas com o mesmo endereço.
+    - nome: Nome de exibição do usuário para personalização da interface.
+    - senha: Hash ou string para autenticação de acesso.
+
+- **Watchlist (Conteúdo):** Registra o acervo de filmes e séries que o usuário deseja assistir. Regra de Negócio Crítica: Todo item adicionado deve obrigatoriamente conter o runtime (duração) e genres (gêneros) vindos da API, pois são os pilares para o funcionamento do algoritmo da Roleta.
+    - usuarioId: Chave estrangeira que vincula o conteúdo ao usuário (padrão de nomenclatura do JSON Server para rotas aninhadas).
+    - tmdbId: ID de referência da API externa para consulta de detalhes e imagens.
+    - titulo: Nome da obra.
+    - duracao: Valor numérico (Integer) em minutos. É o campo base para o filtro de "tempo disponível".
+    - status: Aceita apenas os valores "PENDENTE" ou "ASSISTIDO". Itens marcados como assistidos são ignorados pela roleta.
+
+- **Sorteios:** Registra o histórico de decisões feitas pela roleta. Regra de Negócio Crítica: Cada vez que a roleta é acionada e o usuário confirma a escolha, o sistema deve registrar o filtroAplicado para gerar estatísticas de preferência futura.
+    - usuarioId: Chave estrangeira que vincula o sorteio ao dono da conta.
+    - conteudoId: Referência ao item específico que foi selecionado no giro.
+    - filtroAplicado: Objeto contendo os critérios usados no momento (ex: { "tempoMax": 90, "genero": "Comédia" }).
+    - dataSorteio: Timestamp da data e hora em que a decisão foi tomada.
+
+## 3. Rotas da API (JSON Server)
+
+A aplicação consome a API local simulada pelo JSON Server. Abaixo os principais endpoints:
+
+- `GET /catalogo` - Retorna todos os filmes disponíveis na "nuvem" do MyView para o usuário escolher e adicionar à sua lista.
+- `GET /watchlist?usuarioId=1` - Retorna apenas os filmes que o usuário "salvou" para ver depois.
+- `POST /watchlist` - Simula o ato de "adicionar à minha lista", copiando um item do catalogo para a watchlist.
+
+## 4. Estrutura do Banco de Dados (db.json)
+
+Esta é a representação em formato JSON do banco de dados simulado. Esta estrutura serve para o JSON Server inicializar a API Fake.
+
+```JSON
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "nome": "Usuário Teste",
+      "email": "teste@myview.com"
+    }
+  ],
+  "catalogo": [
+    {
+      "id": "c1",
+      "titulo": "Interestelar",
+      "duracao": 169,
+      "generos": ["Ficção Científica", "Drama"],
+      "posterPath": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlSv7Km.jpg"
+    },
+    {
+      "id": "c2",
+      "titulo": "The Office (Episódio)",
+      "duracao": 22,
+      "generos": ["Comédia"],
+      "posterPath": "https://image.tmdb.org/t/p/w500/799999.jpg"
+    },
+    {
+      "id": "c3",
+      "titulo": "Loki (Série)",
+      "duracao": 50,
+      "generos": ["Aventura", "Fantasia"],
+      "posterPath": "https://image.tmdb.org/t/p/w500/voHUQvjYvB0VmQCpZ9s9v619QqS.jpg"
+    }
+  ],
+  "watchlist": [
+    {
+      "id": "w1",
+      "usuarioId": "1",
+      "catalogoId": "c3",
+      "titulo": "Loki (Série)",
+      "duracao": 50,
+      "generos": ["Aventura", "Fantasia"],
+      "status": "PENDENTE"
+    }
+  ],
+  "sorteios": []
+}
+```

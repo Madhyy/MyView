@@ -1,0 +1,40 @@
+# 📄 Product Requirements Document (PRD) - Roubank
+
+## 1. Visão Geral e Objetivo
+
+O *nome aqui* é uma aplicação web voltada para entusiastas de cinema e TV que sofrem com a "paralisia de decisão". 
+O objetivo é permitir que o usuário gerencie uma lista de interesses (Watchlist) de forma dinâmica e utilize um sistema de sorteio inteligente (Roleta) para escolher o que assistir, baseando-se em filtros de humor, tempo disponível e dados reais de mercado.
+
+**O grande diferencial (Regra de Negócio Principal):** O grande diferencial está na roleta contextual, o sistema filtra sua biblioteca baseando-se no seu tempo disponível (ex: "tenho apenas 40 min") e no seu humor, sorteando apenas títulos que tecnicamente se encaixam no seu momento.
+
+## 2. Atores do Sistema
+
+- **Visitante:** Usuário não autenticado que pode buscar por títulos e ter acesso aos detalhes, entretanto não consegue salvar nada em uma lista persistente ou girar a roleta com itens próprios.
+- **Cliente:** Usuário autenticado que pode buscar títulos e gerenciar a própria lista salva, além do acesso aos filtros personalizados.
+- **Provedor de Dados (API):** É a principal fonte para o intuito do site funcionar, onde será fornecido os dados necessários das midias.
+- **Sistema:** Faz tudo acontecer.
+
+## 3. Histórias de Usuário e Escopo
+
+Abaixo estão as funcionalidades principais do MyView, escritas sob a perspectiva do usuário final.
+
+### 👤 Épico 1: Autenticação e Conta
+
+- **US01 - Criação de Conta:** Como um visitante, quero preencher um formulário (Nome de usuário, Email, Senha) para criar um perfil personalizado no MyView.
+  - _Critérios de Aceitação:_ O Email deve ser validado; todos os campos são obrigatórios; Não é possivel utilizar mais de uma vez o mesmo email.
+- **US02 - Login de Usuario:** Como um usuário, quero inserir minhas credenciais para acessar minha Watchlist e funcionalidades personalizadas.
+
+### 🎬 Épico 2: Curadoria e Watchlist (O "Cadastro e Listagem")
+
+- **US03 - Busca via API:** Como um Usuário, quero pesquisar títulos por nome para encontrar filmes e séries sem precisar digitar os detalhes manualmente.
+- **US04 - Adicionar à Lista:** Como um Cliente, quero informar um valor para depositar na minha conta.
+  - _Critérios de Aceitação:_ O sistema deve salvar o ID da API, o gênero e a duração; o título deve aparecer imediatamente na listagem do usuário.
+- **US05 - Gerenciar Conteúdo:** Como um Usuário, quero poder excluir itens ou marcá-los como "Já Visto" para organizar meu catálogo.
+  - _Critérios de Aceitação:_ Itens marcados como "Visto" não devem aparecer nas opções de sorteio da roleta.
+
+### 🎡 Épico 3: A Experiência MyView (A Roleta)
+
+- **US06 - Filtro de Momento:** Como um Usuário Indeciso, quero selecionar filtros de "Tempo Disponível" e "Gênero" antes de sortear.
+- _Critérios de Aceitação:_ O filtro de tempo deve comparar a duração real do filme com o limite imposto pelo usuário.
+- **US07 - O Sorteio (Roleta):** Como um Usuário Indeciso, quero acionar a roleta para que o MyView escolha o que vou assistir.
+- _Critérios de Aceitação:_ O sorteio deve ser aleatório dentro dos filtros aplicados; o resultado deve exibir o pôster e a sinopse do filme escolhido.

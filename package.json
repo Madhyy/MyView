@@ -1,0 +1,25 @@
+{
+  "name": "myview-main",
+  "version": "1.0.0",
+  "description": "Este projeto tem como objetivo listar filmes e séries, permitindo que o usuário os classifique, por exemplo: adicionar aos favoritados, adicionar o título na lista \"para ver\" ou \"finalizado\". Constando também com filtros de procura ou decisão (uma roleta de decisão) sobre qual série/ filme assistir.",
+  "license": "ISC",
+  "author": "Maria Eduarda Aparecida da Cruz",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "jquery": "^2.2.4",
+    "materialize-css": "^1.0.0",
+    "uuid": "^14.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "typescript": "^6.0.3"
+  }
+}
